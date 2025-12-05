@@ -1,171 +1,132 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
 
-# C extensions
-*.so
+"""Author: Estela Garcia
+Date written: 3/7/2025
+Assignment: Module 8 Final Project Submission
+Short Description: Tip Calculator named "Tippy".
+ Helps you calculate the tip per individual with custom amounts
+   as well as easy preset buttons of 15% and 18%. """
+import tkinter as tk #Import tkinter library for GUI development
+from tkinter import Toplevel #Import specific widgets and data types
+from PIL import Image, ImageTk #Import Image and ImageTk for handling image display in tkinter
+#App
+# variable for user information
+user_data = {
+    "bill_amount": 0, #bill amount
+    "custom_tip": 0, #Custom tip percentage
+    "party_size": 0 #party size
+}
+#Function to open main window
+main_window = tk.Tk()#create the main window
+main_window.title("Tippy") # title
+main_window.configure(bg='green') #background color for main window
 
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
+#image for the first window
+img1 = Image.open("C:/Users/egarc/OneDrive/Documents/tipjar.jpg").resize((150, 150), Image.LANCZOS) # first image
+photo1 = ImageTk.PhotoImage(img1) #convert the image to a format suitable for tkinter
+img_label1 = tk.Label(main_window, image=photo1) #create a label to display the image
+img_label1.image = photo1 # keep a reference to avoid the image being garbage collected
+img_label1.pack() #pack the image label into the main window
 
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
+#Function to calculate custom tip
+def custom_tip(entry_amount, entry_percentage, party_size, show_results): 
+    bill = float(entry_amount.get())#conversion of bill entry to a float
+    percentage = float(entry_percentage.get())#conversion of percentage entry to a float
+    custom_tip = bill * (percentage / 100) #calculate custom tip based on percentage
+    bill_amount = bill + custom_tip #calculate bill amount plus tip
+    party_size =int(party_size.get()) # convert party size to an integer
+    amount_per_person = bill_amount/party_size #calculation of what each person is to pay   
+    show_results(main_window,custom_tip, bill_amount, amount_per_person) # will show results in result window
 
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
+#Function to calculate preset 15%
+def calculate_15_tip(entry_amount, party_size, show_results):
+    bill = float(entry_amount.get()) #conversion of bill entry to a float
+    percentage = 15 # preset tip of 15%
+    custom_tip = bill * (percentage / 100) #calculate custom tip based on percentage
+    bill_amount = bill + custom_tip  #calcuation of bill amount and tip
+    party_size = int(party_size.get()) #convert party size to an integer
+    amount_per_person = bill_amount/party_size #calculation of what each person is to pay 
+    show_results(main_window,custom_tip, bill_amount, amount_per_person) # will show results in result window
+#Function to calculate preset 18%
+def calculate_18_tip(entry_amount, party_size, show_results):
+    bill = float(entry_amount.get())#conversion of bill entry to a float
+    percentage = 18 #preset tip of 18%
+    custom_tip = bill * (percentage / 100) #calculation of custom tip based on percentage of 18%
+    bill_amount = bill + custom_tip #calcuation of bill amount and tip
+    party_size =int(party_size.get()) #convert the party size entry to an interger
+    amount_per_person = bill_amount/party_size#calculation of what each person is to pay 
+    show_results(main_window, custom_tip, bill_amount, amount_per_person)# will show results in result window
 
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
-cover/
+ # Function to open result window
+def answer_window(tip, total, amount_per_person): #window creates result window with tip, total and amount per person cost.
+    answer_window = tk.Toplevel(main_window) #create window result window
+    answer_window.title("Calculation Results") #title for result window
+    answer_window.geometry("300x300")      #size of result window
+    answer_window.configure(bg='lightblue') #background for result window
+      
+    result_label = tk.Label(answer_window, text="Thank you for using Tippy the tip Calculator") #top label for result window
+    result_label.pack()
+    
+    result_label = tk.Label(answer_window, text=f"Tip: ${tip:.2f}\nTotal: ${total:.2f}\nPer Person: ${amount_per_person:.2f}") #labels for result window
+    result_label.pack()
+    
+    close_button = tk.Button(answer_window, text="Close", command=answer_window.destroy) #close button for result window
+    close_button.pack()    
 
-# Translations
-*.mo
-*.pot
+#image for result window
+    img2 = Image.open("C:/Users/egarc/OneDrive/Documents/thank you.jpg").resize((150, 150), Image.LANCZOS) #image for result window
+    photo2 = ImageTk.PhotoImage(img2) #convert the image to a format suitable for tkinter
+    img_label2 = tk.Label(answer_window, image=photo2) #create a label to display the image
+    img_label2.image = photo2 # keep a reference to avoid the image being garbage collected
+    img_label2.pack() #pack the image label into the main window  
 
-# Django stuff:
-*.log
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
 
-# Flask stuff:
-instance/
-.webassets-cache
+def show_results(window,tip,total, amount_per_person):
+    answer_window(tip,total,amount_per_person) # call to function to display results
+#results in result window
+    result_label = tk.Label(answer_window, text=f"Tip: ${tip:.2f}\nTotal: ${total:.2f}")
+    result_label.pack()
 
-# Scrapy stuff:
-.scrapy
+    close_button =tk.Button(answer_window, text="close", command=answer_window.destroy)
+    close_button.pack()
 
-# Sphinx documentation
-docs/_build/
+#reset after a new attempt
+def reset_fields():
+    bill_entry.delete(0,tk.END) # clear the bill amount entry field
+    custom_tip_entry.delete(0,tk.END) #clear the custom tip entry field
+    party_size_entry.delete(0,tk.END) #clear the party size entry field
 
-# PyBuilder
-.pybuilder/
-target/
+#UI elements
+bill_label = tk.Label(main_window, text = "Enter Bill Amount:") #label for bill amount on main window
+bill_label.pack()
 
-# Jupyter Notebook
-.ipynb_checkpoints
+bill_entry = tk.Entry(main_window) #entry box on main window for "Enter Bill Amount"
+bill_entry.pack()
 
-# IPython
-profile_default/
-ipython_config.py
+party_size_label =tk.Label(main_window, text ="Party Size:") #lable for party size
+party_size_label.pack()
 
-# pyenv
-#   For a library or package, you might want to ignore these files since the code is
-#   intended to run in multiple environments; otherwise, check them in:
-# .python-version
+party_size_entry =tk.Entry(main_window) #entry box for "party size" on main window
+party_size_entry.pack()
 
-# pipenv
-#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
-#   However, in case of collaboration, if having platform-specific dependencies or dependencies
-#   having no cross-platform support, pipenv may install dependencies that don't work, or not
-#   install all needed dependencies.
-#Pipfile.lock
+custom_tip_label = tk.Label(main_window,text= "Enter Custom Tip Percentage:") #Label for custom tip percentage on main window
+custom_tip_label.pack()
 
-# UV
-#   Similar to Pipfile.lock, it is generally recommended to include uv.lock in version control.
-#   This is especially recommended for binary packages to ensure reproducibility, and is more
-#   commonly ignored for libraries.
-#uv.lock
+custom_tip_entry =tk.Entry(main_window) # entry box for custom tip entry on main window
+custom_tip_entry.pack()
 
-# poetry
-#   Similar to Pipfile.lock, it is generally recommended to include poetry.lock in version control.
-#   This is especially recommended for binary packages to ensure reproducibility, and is more
-#   commonly ignored for libraries.
-#   https://python-poetry.org/docs/basic-usage/#commit-your-poetrylock-file-to-version-control
-#poetry.lock
+# Buttons for preset and custom tip
+tip_15_button = tk.Button(main_window, text ="15% Tip", command=lambda: calculate_15_tip(bill_entry, party_size_entry, show_results)) #15% button
+tip_15_button.pack()
 
-# pdm
-#   Similar to Pipfile.lock, it is generally recommended to include pdm.lock in version control.
-#pdm.lock
-#   pdm stores project-wide configurations in .pdm.toml, but it is recommended to not include it
-#   in version control.
-#   https://pdm.fming.dev/latest/usage/project/#working-with-version-control
-.pdm.toml
-.pdm-python
-.pdm-build/
+tip_18_button = tk.Button(main_window, text ="18% Tip", command=lambda: calculate_18_tip(bill_entry, party_size_entry, show_results)) #18% button
+tip_18_button.pack()
 
-# PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
-__pypackages__/
+custom_tip_button =tk.Button(main_window, text="Calculate Custom Tip", command=lambda: custom_tip(bill_entry,custom_tip_entry, party_size_entry, show_results)) #custom tip button
+custom_tip_button.pack()
 
-# Celery stuff
-celerybeat-schedule
-celerybeat.pid
+#reset button
+reset_button = tk.Button(main_window, text="clear", command=reset_fields) #clear button
+reset_button.pack()
 
-# SageMath parsed files
-*.sage.py
-
-# Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
-# Spyder project settings
-.spyderproject
-.spyproject
-
-# Rope project settings
-.ropeproject
-
-# mkdocs documentation
-/site
-
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Pyre type checker
-.pyre/
-
-# pytype static type analyzer
-.pytype/
-
-# Cython debug symbols
-cython_debug/
-
-# PyCharm
-#  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
-#  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
-#  and can be added to the global gitignore or merged into this file.  For a more nuclear
-#  option (not recommended) you can uncomment the following to ignore the entire idea folder.
-#.idea/
-
-# PyPI configuration file
-.pypirc
+# run main window
+main_window.mainloop() #Start the tkinter main event loop to keep the window open
